@@ -1,0 +1,59 @@
+log:
+    image: busybox:latest
+    volumes:
+        - /var/log/nginx
+
+cache:
+    image: busybox:latest
+    volumes:
+        - /var/cache/nginx
+
+database:
+    image: busybox:latest
+    volumes:
+        - /var/lib/mysql
+
+websites:
+    image: busybox:latest
+    volumes:
+        - /var/www
+
+mariadb:
+    image: mariadb:latest
+    expose:
+        - "3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: db
+        MYSQL_PASSWORD: db
+        MYSQL_DATABASE: database
+    volumes_from:
+        - database
+
+iojs:
+    image: iojs:latest
+    links:
+        - mariadb
+
+php:
+    image: php
+    expose:
+        - "9000"
+    links:
+        - mariadb
+    volumes_from:
+        - websites
+
+nginx:
+    image: nginx
+    ports:
+        - "80:80"
+        - "443:443"
+    links:
+        - php
+    volumes:
+        - ./nginx/conf/:/etc/nginx
+    volumes_from:
+        - log
+        - cache
+        - websites
