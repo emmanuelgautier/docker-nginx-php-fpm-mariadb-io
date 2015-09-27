@@ -30,13 +30,13 @@ mariadb:
     volumes_from:
         - database
 
-iojs:
-    image: iojs:latest
+nodejs:
+    image: node:latest
     links:
         - mariadb
 
 php:
-    image: php
+    image: stack-php
     expose:
         - "9000"
     links:
@@ -45,7 +45,7 @@ php:
         - websites
 
 nginx:
-    image: nginx
+    image: stack-nginx
     ports:
         - "80:80"
         - "443:443"
@@ -56,4 +56,9 @@ nginx:
     volumes_from:
         - log
         - cache
+        - websites
+
+static_webapp:
+    image: static_webapp
+    volumes_from:
         - websites
