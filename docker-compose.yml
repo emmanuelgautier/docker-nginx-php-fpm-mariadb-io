@@ -15,8 +15,8 @@ database:
 
 websites:
     image: busybox:latest
-    volumes:
-        - /var/www
+    volumes_from:
+        - static_webapp
 
 mariadb:
     image: mariadb:latest
@@ -30,10 +30,10 @@ mariadb:
     volumes_from:
         - database
 
-nodejs:
-    image: node:latest
-    links:
-        - mariadb
+#nodejs:
+#    image: node:latest
+#    links:
+#        - mariadb
 
 php:
     image: stack-php
@@ -41,8 +41,6 @@ php:
         - "9000"
     links:
         - mariadb
-    volumes_from:
-        - websites
 
 nginx:
     image: stack-nginx
@@ -60,5 +58,3 @@ nginx:
 
 static_webapp:
     image: static_webapp
-    volumes_from:
-        - websites
