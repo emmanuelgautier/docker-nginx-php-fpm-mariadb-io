@@ -36,14 +36,14 @@ mariadb:
 #        - mariadb
 
 php:
-    image: stack-php
+    build: ./php
     expose:
         - "9000"
     links:
         - mariadb
 
 nginx:
-    image: stack-nginx
+    build: ./nginx
     ports:
         - "80:80"
         - "443:443"
@@ -57,4 +57,4 @@ nginx:
         - websites
 
 static_webapp:
-    image: static_webapp
+    build: ./static_webapp
